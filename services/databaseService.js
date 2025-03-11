@@ -25,6 +25,29 @@ const databaseService = {
       return { error: error.message };
     }
   },
+  //Update Document
+  async updateDocument(dbId, colId, id, data) {
+    try {
+      const response = await database.updateDocument(dbId, colId, id, data);
+      return { data: response };
+    } catch (error) {
+      console.error("Error updating document:", error.message);
+      return { error: error.message };
+    }
+  },
+
+
+
+  //Delete Document
+  async deleteDocument(dbId, colId, id) {
+    try {
+      const response = await database.deleteDocument(dbId, colId, id);
+      return { success: true };
+    } catch (error) {
+      console.error("Error deleting document:", error.message);
+      return { error: error.message };
+    }
+  },
 };
 
 export default databaseService;
