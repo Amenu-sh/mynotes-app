@@ -7,6 +7,9 @@ const config = {
   db: process.env.EXPO_PUBLIC_APPWRITE_DB_ID,
   col: { notes: process.env.EXPO_PUBLIC_APPWRITE_COL_NOTES_ID },
 };
+
+console.log("Appwrite Config:", config); // Add logging
+
 const client = new Client()
   .setEndpoint(config.endpoint)
   .setProject(config.projectId);
@@ -20,5 +23,5 @@ switch (Platform.OS) {
     break;
 }
 
-const databases = new Databases(client);
-export { databases, config, client };
+const database = new Databases(client);
+export { database, config, client };
