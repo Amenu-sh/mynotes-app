@@ -1,10 +1,16 @@
 import { useState, useRef } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 
 const NoteItem = ({ note, onDelete, onEdit }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedText, setEditedTExt] = useState(note.text);
-  const inputRef = useRef();
+  const inputRef = useRef(null);
 
   const handleSave = () => {
     if (editedText.trim() === "") return;
@@ -15,7 +21,7 @@ const NoteItem = ({ note, onDelete, onEdit }) => {
   return (
     <View style={styles.noteItem}>
       {isEditing ? (
-        <Text
+        <TextInput
           ref={inputRef}
           style={styles.noteText}
           value={editedText}
@@ -42,11 +48,11 @@ const NoteItem = ({ note, onDelete, onEdit }) => {
             <Text style={styles.edit}>✏️</Text>
           </TouchableOpacity>
         )}
-      </View>
 
-      <TouchableOpacity onPress={() => onDelete(note.$id)}>
-        <Text style={styles.delete}>❌</Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={() => onDelete(note.$id)}>
+          <Text style={styles.delete}>❌</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
