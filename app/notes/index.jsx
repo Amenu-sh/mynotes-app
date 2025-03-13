@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  ActivityIndicator,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
@@ -16,11 +16,13 @@ import noteService from "@/services/noteService";
 const NoteScreen = () => {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
+
   const [notes, setNotes] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [newNote, setNewNote] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   useEffect(() => {
     if (!authLoading && !user) {
       router.replace("/auth");
@@ -35,7 +37,7 @@ const NoteScreen = () => {
 
   const fetchNotes = async () => {
     setLoading(true);
-    const response = await noteService.getNotes();
+    const response = await noteService.getNotes(user.$id);
 
     if (response.error) {
       setError(response.error);
@@ -63,7 +65,8 @@ const NoteScreen = () => {
     setNewNote("");
     setModalVisible(false);
   };
-  //Delete Note
+
+  // Delete Note
   const deleteNote = async (id) => {
     Alert.alert("Delete Note", "Are you sure you want to delete this note?", [
       {
@@ -84,12 +87,14 @@ const NoteScreen = () => {
       },
     ]);
   };
-  //Edit Note
+
+  // Edit Note
   const editNote = async (id, newText) => {
     if (!newText.trim()) {
-      Alert.alert("Error", "Note text can not be empty");
+      Alert.alert("Error", "Note text cannot be empty");
       return;
     }
+
     const response = await noteService.updateNote(id, newText);
     if (response.error) {
       Alert.alert("Error", response.error);
@@ -109,7 +114,12 @@ const NoteScreen = () => {
       ) : (
         <>
           {error && <Text style={styles.errorText}>{error}</Text>}
-          <NoteList notes={notes} onDelete={deleteNote} onEdit={editNote} />
+
+          {notes.length === 0 ? (
+            <Text style={styles.noNotesText}>You have no notes</Text>
+          ) : (
+            <NoteList notes={notes} onDelete={deleteNote} onEdit={editNote} />
+          )}
         </>
       )}
 
@@ -119,6 +129,7 @@ const NoteScreen = () => {
       >
         <Text style={styles.addButtonText}>+ Add Note</Text>
       </TouchableOpacity>
+
       {/* Modal */}
       <AddNoteModal
         modalVisible={modalVisible}
@@ -130,13 +141,13 @@ const NoteScreen = () => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
     backgroundColor: "#fff",
   },
-
   addButton: {
     position: "absolute",
     bottom: 20,
@@ -144,7 +155,7 @@ const styles = StyleSheet.create({
     right: 20,
     backgroundColor: "#007bff",
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 8,
     alignItems: "center",
   },
   addButtonText: {
@@ -154,9 +165,16 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: "red",
-    fontSize: 16,
     textAlign: "center",
-    margin: 10,
+    marginBottom: 10,
+    fontSize: 16,
+  },
+  noNotesText: {
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#555",
+    marginTop: 15,
   },
 });
 

@@ -2,19 +2,18 @@ import { account } from "./appwrite";
 import { ID } from "react-native-appwrite";
 
 const authService = {
-  //Register
+  // Register a user
   async register(email, password) {
     try {
-      const response = await account.create(ID.unique(), password, email);
+      const response = await account.create(ID.unique(), email, password);
       return response;
     } catch (error) {
-      console.error("Error registering user:", error.message);
       return {
         error: error.message || "Registration failed. Please try again",
       };
     }
   },
-  //Login
+  // Login
   async login(email, password) {
     try {
       const response = await account.createEmailPasswordSession(
@@ -23,31 +22,30 @@ const authService = {
       );
       return response;
     } catch (error) {
-      console.error("Error logging in user:", error.message);
       return {
-        error: error.message || "Login failed. Please Check your credentials",
+        error: error.message || "Login failed. Please check your credentials",
       };
     }
   },
-  //Logout
-  async logout() {
+  // Get logged in user
+  async getUser() {
     try {
-      const response = await account.deleteSession("current");
-      return response;
+      return await account.get();
     } catch (error) {
-      console.error("Error logging out user:", error.message);
-      return { error: error.message || "Logout failed. Please try again" };
+      return null;
     }
   },
 
-  //Get user
-  async getUser() {
+  // Logout user
+  async logout() {
     try {
-      const response = await account.get();
-      return response;
+      await account.deleteSession("current");
     } catch (error) {
-      console.error("Error fetching user:", error.message);
-      return { error: error.message || "Error fetching user" };
+      return {
+        error: error.message || "Logout failed. Please try again",
+      };
     }
   },
 };
+
+export default authService;
