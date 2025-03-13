@@ -1,6 +1,8 @@
 # Mynotes App (React Native)
 
 This is a simple notes app built with React Native. It allows users to create, read, update, and delete notes and store them using Appwrite. It also uses authentication through Appwrite to allow users to sign up and log in and create private notes.
+<img width="900" alt="mynotes-app" src="https://github.com/user-attachments/assets/8883c99e-b3c8-4ea1-9fe9-7483a31da1a9" />
+
 
 ## Get started
 
